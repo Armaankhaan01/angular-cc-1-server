@@ -5,6 +5,47 @@ const cors = require("cors");
 const app = express();
 const port = 3000;
 
+// Utility function to read counters from api.json
+const readCounters = () => {
+  try {
+    const data = fs.readFileSync("api.json", "utf8");
+    return JSON.parse(data);
+  } catch (error) {
+    console.error("Error reading api.json:", error);
+    return { totalRequests: 0, endpointCounters: {} };
+  }
+};
+
+// Utility function to write counters to api.json
+const writeCounters = (counters) => {
+  try {
+    fs.writeFileSync("api.json", JSON.stringify(counters, null, 2));
+  } catch (error) {
+    console.error("Error writing to api.json:", error);
+  }
+};
+
+// Initialize counters from api.json
+let { totalRequests, endpointCounters } = readCounters();
+
+// Middleware to count API requests
+app.use((req, res, next) => {
+  totalRequests += 1;
+
+  const endpoint = req.path;
+  if (endpointCounters[endpoint]) {
+    endpointCounters[endpoint] += 1;
+  } else {
+    endpointCounters[endpoint] = 1;
+  }
+
+  // Save the updated counters to api.json
+  writeCounters({ totalRequests, endpointCounters });
+
+  next();
+});
+
+
 // Cors configuration - Allows requests from localhost:4200
 const corsOptions = {
   origin: "http://localhost:4200",
