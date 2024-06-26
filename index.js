@@ -3,7 +3,7 @@ const fs = require("fs");
 const cors = require("cors");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Utility function to read counters from api.json
 const readCounters = () => {
@@ -44,7 +44,6 @@ app.use((req, res, next) => {
 
   next();
 });
-
 
 // Cors configuration - Allows requests from localhost:4200
 const corsOptions = {
@@ -223,6 +222,15 @@ app.delete("/clothes/:id", (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
+const server = app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+// Gracefully handle port in use error
+server.on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
+    console.error(`Port ${port} is already in use.`);
+  } else {
+    console.error(`Server error: ${err.message}`);
+  }
 });

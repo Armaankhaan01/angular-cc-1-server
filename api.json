@@ -1,7 +1,7 @@
 {
-  "totalRequests": 398,
+  "totalRequests": 400,
   "endpointCounters": {
-    "/clothes": 359,
+    "/clothes": 360,
     "//clothes": 1,
     "/clothes/2": 4,
     "/clothes/16": 2,
@@ -17,6 +17,7 @@
     "/clothes/11": 2,
     "/clothes/20": 2,
     "/clothes/21": 2,
-    "/clothes/22": 2
+    "/clothes/22": 2,
+    "/favicon.ico": 1
   }
 }
